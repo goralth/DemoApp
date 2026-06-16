@@ -87,7 +87,24 @@
     require(["esri/Map","esri/views/MapView","esri/layers/GeoJSONLayer"], function (Map, MapView, GeoJSONLayer) {
       const homeMap = new Map({ basemap: "gray-vector" });
       const view = new MapView({ container: "homeMap", map: homeMap, center: [-95.477, 30.40], zoom: 9, padding: { top: 0, left: 0, right: 0, bottom: 40 } });
-      homeMap.add(new GeoJSONLayer({ url: "./data/CountyDistrict_Commissioner_2742505522634505986.geojson", title: "County District Commissioner", opacity: 0.75 }));
+      const countyLayer = new GeoJSONLayer({
+          url: "./data/CountyDistrict_Commissioner_2742505522634505986.geojson",
+          title: "County District Commissioner",
+          opacity: 0.75,
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-fill",
+              color: [0, 0, 0, 0],
+              outline: {
+                color: [31, 78, 121, 1],
+                width: 2
+              }
+            }
+          }
+        });
+
+      homeMap.add(countyLayer);
       let explorerLoaded = false;
       function showPage(pageId) {
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
