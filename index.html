@@ -78,7 +78,8 @@
 
     .page {
       display: none;
-      height: calc(100vh - 86px);
+      padding: 16px;
+      box-sizing: border-box;
     }
 
     .page.active {
@@ -89,9 +90,7 @@
       display: grid;
       grid-template-columns: 340px 1fr 340px;
       gap: 16px;
-      padding: 16px;
-      box-sizing: border-box;
-      height: 100%;
+      align-items: start;
     }
 
     .panel {
@@ -100,14 +99,11 @@
       border-radius: 14px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       overflow: hidden;
-      min-height: 0;
     }
 
     .panel-inner {
       padding: 18px;
-      height: 100%;
       box-sizing: border-box;
-      overflow: auto;
     }
 
     .panel h3 {
@@ -116,18 +112,13 @@
     }
 
     .overview-map {
-      height: 100%;
-      min-height: 0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
+      min-height: 650px;
     }
 
     #homeMap {
       width: 100%;
-      flex: 1 1 auto;
-      min-height: 0;
-      border-radius: 0 0 14px 14px;
+      height: 580px;
+      border-top: 1px solid #e5e7eb;
     }
 
     .side-card {
@@ -145,14 +136,12 @@
     }
 
     .data-shell {
-      height: 100%;
-      padding: 16px;
-      box-sizing: border-box;
+      height: calc(100vh - 118px);
     }
 
     .explorer-frame {
       width: 100%;
-      height: calc(100vh - 86px - 32px);
+      height: 100%;
       border: 1px solid #d8dbe3;
       border-radius: 12px;
       background: #fff;
@@ -195,7 +184,7 @@
         </div>
 
         <div class="panel overview-map">
-          <div class="panel-inner" style="padding-bottom:0;">
+          <div class="panel-inner">
             <h3>Countywide Overview</h3>
           </div>
           <div id="homeMap"></div>
@@ -232,17 +221,17 @@
         opacity: 0.8
       });
 
-      const homeMap = new Map({
+      const map = new Map({
         basemap: "gray-vector",
         layers: [countyLayer]
       });
 
       const view = new MapView({
         container: "homeMap",
-        map: homeMap,
+        map: map,
         center: [-95.477, 30.40],
         zoom: 9,
-        padding: { top: 0, left: 0, right: 0, bottom: 40 }
+        padding: { bottom: 40 }
       });
 
       countyLayer.when(function () {
@@ -257,7 +246,6 @@
         document.querySelectorAll(".page").forEach(function (p) {
           p.classList.remove("active");
         });
-
         document.getElementById(pageId).classList.add("active");
         document.getElementById("homeNav").classList.toggle("active", pageId === "homePage");
         document.getElementById("dataExplorerNav").classList.toggle("active", pageId === "dataExplorerPage");
