@@ -105,6 +105,7 @@
         });
 
       homeMap.add(countyLayer);
+      view.goTo(countyLayer.fullExtent);
       let explorerLoaded = false;
       function showPage(pageId) {
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
