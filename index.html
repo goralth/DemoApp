@@ -45,6 +45,7 @@
     <button class="nav-btn outline">Methodology</button>
     <button class="nav-btn right">Export Data</button>
   </header>
+
   <main>
     <section id="homePage" class="page active">
       <div class="home-shell">
@@ -60,10 +61,12 @@
             <li><strong>Data-Driven:</strong> Leveraging quantitative data to analyze system performance.</li>
           </ul>
         </div></div>
+
         <div class="panel overview-map">
           <div class="panel-inner" style="padding-bottom:0;"><h3>Countywide Overview</h3></div>
           <div id="homeMap"></div>
         </div>
+
         <div class="panel"><div class="panel-inner">
           <h3>Vision & Goals</h3>
           <p>The plan's objectives are defined and tracked across six core performance areas.</p>
@@ -77,49 +80,89 @@
         </div></div>
       </div>
     </section>
+
     <section id="dataExplorerPage" class="page">
       <div class="data-shell">
         <iframe id="explorerFrame" class="explorer-frame" src="about:blank" title="Data Explorer"></iframe>
       </div>
     </section>
   </main>
+
   <script>
-    require(["esri/Map","esri/views/MapView","esri/layers/GeoJSONLayer"], function (Map, MapView, GeoJSONLayer) {
-      const homeMap = new Map({ basemap: "gray-vector" });
-      const view = new MapView({ container: "homeMap", map: homeMap, center: [-95.477, 30.40], zoom: 9, padding: { top: 0, left: 0, right: 0, bottom: 40 } });
+    require(["esri/Map", "esri/views/MapView", "esri/layers/GeoJSONLayer"], function (Map, MapView, GeoJSONLayer) {
+
+      const homeMap = new Map({
+        basemap: "gray-vector"
+      });
+
+      const view = new MapView({
+        container: "homeMap",
+        map: homeMap,
+        center: [-95.477, 30.40],
+        zoom: 9,
+        padding: { top: 0, left: 0, right: 0, bottom: 40 }
+      });
+
       const countyLayer = new GeoJSONLayer({
-          url: "./data/CountyDistrict_Commissioner_2742505522634505986.geojson",
-          title: "County District Commissioner",
-          opacity: 0.75,
-          renderer: {
-            type: "simple",
-            symbol: {
-              type: "simple-fill",
-              color: [0, 0, 0, 0],
-              outline: {
-                color: [31, 78, 121, 1],
-                width: 2
-              }
+        url: "./data/CountyDistrict_Commissioner_2742505522634505986.geojson",
+        title: "County District Commissioner",
+        opacity: 0.75,
+        renderer: {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [0, 0, 0, 0],
+            outline: {
+              color: [31, 78, 121, 1],
+              width: 2
             }
           }
-        });
+        }
+      });
 
       homeMap.add(countyLayer);
-      view.goTo(countyLayer.fullExtent);
+
+      view.when(function () {
+        countyLayer.when(function () {
+          if (countyLayer.fullExtent) {
+            view.goTo(countyLayer.fullExtent).catch(function (error) {
+              console.error("goTo error:", error);
+            });
+          } else {
+            console.warn("County layer loaded but fullExtent is null");
+          }
+        }).catch(function (error) {
+          console.error("County layer failed to load:", error);
+        });
+      }).catch(function (error) {
+        console.error("View failed to initialize:", error);
+      });
+
       let explorerLoaded = false;
+
       function showPage(pageId) {
         document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
         document.getElementById(pageId).classList.add("active");
         document.getElementById("homeNav").classList.toggle("active", pageId === "homePage");
         document.getElementById("dataExplorerNav").classList.toggle("active", pageId === "dataExplorerPage");
-       
       }
+
       function loadExplorerPage() {
         const frame = document.getElementById("explorerFrame");
-        if (!explorerLoaded) { frame.src = "./ARCGISDashboard.html"; explorerLoaded = true; }
+        if (!explorerLoaded) {
+          frame.src = "./ARCGISDashboard.html";
+          explorerLoaded = true;
+        }
       }
-      document.getElementById("homeNav").addEventListener("click", () => showPage("homePage"));
-      document.getElementById("dataExplorerNav").addEventListener("click", () => { showPage("dataExplorerPage"); loadExplorerPage(); });
+
+      document.getElementById("homeNav").addEventListener("click", function () {
+        showPage("homePage");
+      });
+
+      document.getElementById("dataExplorerNav").addEventListener("click", function () {
+        showPage("dataExplorerPage");
+        loadExplorerPage();
+      });
     });
   </script>
 </body>
