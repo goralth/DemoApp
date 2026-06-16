@@ -113,12 +113,13 @@
 
     .overview-map {
       min-height: 650px;
+      padding: 0;
     }
 
     #homeMap {
       width: 100%;
-      height: 580px;
-      border-top: 1px solid #e5e7eb;
+      height: 650px;
+      border-radius: 14px;
     }
 
     .side-card {
@@ -184,9 +185,6 @@
         </div>
 
         <div class="panel overview-map">
-          <div class="panel-inner">
-            <h3>Countywide Overview</h3>
-          </div>
           <div id="homeMap"></div>
         </div>
 
@@ -231,7 +229,10 @@
         map: map,
         center: [-95.477, 30.40],
         zoom: 9,
-        padding: { bottom: 40 }
+        padding: { bottom: 40 },
+        ui: {
+          components: ["attribution"]
+        }
       });
 
       countyLayer.when(function () {
