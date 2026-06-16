@@ -94,7 +94,7 @@
         document.getElementById(pageId).classList.add("active");
         document.getElementById("homeNav").classList.toggle("active", pageId === "homePage");
         document.getElementById("dataExplorerNav").classList.toggle("active", pageId === "dataExplorerPage");
-        setTimeout(() => view.resize(), 0);
+       
       }
       function loadExplorerPage() {
         const frame = document.getElementById("explorerFrame");
